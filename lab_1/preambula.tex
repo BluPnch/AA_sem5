@@ -12,7 +12,6 @@
 \usepackage{xcolor}
 \usepackage{caption}
 \usepackage{tempora}
-\usepackage{titlesec}
 \usepackage{setspace}
 \usepackage{geometry}
 \usepackage{indentfirst}
@@ -23,6 +22,10 @@
 \usepackage{flafter}
 \usepackage{enumitem}
 \usepackage{multirow}
+\usepackage{array}
+\usepackage{longtable}
+
+\usepackage[compact]{titlesec}
 
 \usepackage[figure,table]{totalcount}
 \usepackage{lastpage}
@@ -31,7 +34,7 @@
 
 
 \newcommand{\ssr}[1]{\begin{center}
-    \LARGE\bfseries{#1}
+    \large\bfseries{#1}
   \end{center} \addcontentsline{toc}{chapter}{#1}  }
 
 
@@ -89,10 +92,10 @@
 \graphicspath{{images/}}%путь к рисункам
 
 \newcommand{\floor}[1]{\lfloor #1 \rfloor}
-
+\usepackage[utf8]{inputenc}
 
 \lstset{
-  language=Python,
+  language=[Sharp]C,
   frame=single,
   captionpos=b,
   xleftmargin=10pt,
@@ -108,7 +111,8 @@
   commentstyle=\itshape\color{green!50!black},
   stringstyle=\color{orange},
   breaklines=true,
-  breakatwhitespace=true
+  breakatwhitespace=true,
+  morekeywords={class, interface, namespace, using, public, private, protected, static, void, string, int, bool, var, return, if, else, for, foreach, while, try, catch, finally, switch, case, default, new, this, base, enum, delegate, event, readonly, sealed, abstract, virtual, override, internal, extern, in, out} % Добавление специфичных для C# ключевых слов
 }
 
 

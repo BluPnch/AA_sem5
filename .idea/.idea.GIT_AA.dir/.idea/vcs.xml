@@ -2,5 +2,13 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/lab_1/aa-short-report-template" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/lab_1/bmstu_CG_CP" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/lab_1/rep" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/lab_1/vvl22u437" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/lab_4/rep" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/lab_4/rep_otkat_try_ann" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/lab_5" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/lab_6/rep" vcs="Git" />
   </component>
 </project>
