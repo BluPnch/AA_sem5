@@ -1,0 +1,133 @@
+\chapter{Технологическая часть}
+
+В данном разделе будут рассмотрены средства, использованные для разработки, а также приведены коды реализованных алгоритмов.
+
+\section{Средства реализации}
+
+Для реализации алгоритмов был выбран MicroPython, так как он обеспечивает эффективную работу на микроконтроллерах. Это позволило выполнить точные замеры времени выполнения.
+
+\subsection{Итеративный алгоритм поиска расстояния Левенштейна}
+
+\begin{center}
+\begin{lstlisting}[caption={Итеративный алгоритм поиска расстояния Левенштейна}, label={lst:l_iteration}]
+def l_iteration_matrix_cost(s1, s2):
+    m, n = len(s1), len(s2)
+    D = [[0] * (n + 1) for _ in range(m + 1)]
+
+    for j in range(1, n + 1):
+        D[0][j] = j
+    for i in range(1, m + 1):
+        D[i][0] = i
+
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            D[i][j] = min(
+                D[i - 1][j] + 1,
+                D[i][j - 1] + 1,
+                D[i - 1][j - 1] + is_replaced(s1[i - 1], s2[j - 1])
+            )
+
+    return D[m][n]
+\end{lstlisting}
+\end{center}
+
+\subsection{Рекурсивный алгоритм поиска расстояния Левенштейна}
+
+\begin{center}
+\begin{lstlisting}[caption={Рекурсивный алгоритм поиска расстояния Левенштейна}, label={lst:l_recursion}]
+def l_recursion(s1, s2, i, j):
+    if i == 0:
+        return j
+    elif j == 0:
+        return i
+    else:
+        return min(
+            l_recursion(s1, s2, i - 1, j) + 1,
+            l_recursion(s1, s2, i, j - 1) + 1,
+            l_recursion(s1, s2, i - 1, j - 1) + is_replaced(s1[i - 1], s2[j - 1])
+        )
+\end{lstlisting}
+\end{center}
+
+\subsection{Рекурсивный алгоритм с мемоизацией}
+
+\begin{center}
+\begin{lstlisting}[caption={Рекурсивный алгоритм с мемоизацией для поиска расстояния Левенштейна}, label={lst:l_recursion_cache}]
+def l_recursion_cache(s1, s2, i, j, memo):
+    if memo[i][j] != -1:
+        return memo[i][j]
+
+    if i == 0:
+        memo[i][j] = j
+    elif j == 0:
+        memo[i][j] = i
+    else:
+        memo[i][j] = min(
+            l_recursion_cache(s1, s2, i - 1, j, memo) + 1,
+            l_recursion_cache(s1, s2, i, j - 1, memo) + 1,
+            l_recursion_cache(s1, s2, i - 1, j - 1, memo) + is_replaced(s1[i - 1], s2[j - 1])
+        )
+    return memo[i][j]
+\end{lstlisting}
+\end{center}
+
+\subsection{Алгоритм Дамерау-Левенштейна}
+
+\begin{center}
+\begin{lstlisting}[caption={Алгоритм поиска расстояния Дамерау-Левенштейна}, label={lst:dl_matrix}]
+def dl_matrix_cost(s1, s2):
+    m, n = len(s1), len(s2)
+    D = [[0] * (n + 1) for _ in range(m + 1)]
+
+    for j in range(1, n + 1):
+        D[0][j] = j
+    for i in range(1, m + 1):
+        D[i][0] = i
+
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            D[i][j] = min(
+                D[i - 1][j] + 1,
+                D[i][j - 1] + 1,
+                D[i - 1][j - 1] + is_replaced(s1[i - 1], s2[j - 1])
+            )
+            if i > 1 and j > 1 and s1[i - 1] == s2[j - 2] and s1[i - 2] == s2[j - 1]:
+                D[i][j] = min(D[i][j], D[i - 2][j - 2] + 1)
+
+    return D[m][n]
+\end{lstlisting}
+\end{center}
+
+\section{Тестовые данные}
+
+Для тестирования использовались строки различной длины и содержания, чтобы проверить корректность работы алгоритмов. Все тесты пройдены успешно. Тестовые данные представлены в таблице \ref{tab:test_data}.
+
+\begin{center}
+\begin{table}[H]
+    \centering
+    \caption{Тестовые данные для алгоритмов}
+    \label{tab:test_data}
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        Номер теста & Строка 1 & Строка 2 & Ожидаемое расстояние \\ \hline
+        1 & "" & "" & 0 \\ \hline
+        2 & "" & "a" & 1 \\ \hline
+        3 & "" & "ab" & 2 \\ \hline
+        4 & "a" & "" & 1 \\ \hline
+        5 & "ab" & "" & 2 \\ \hline
+        6 & "a" & "a" & 0 \\ \hline
+        7 & "a" & "b" & 1 \\ \hline
+        8 & "cat" & "cut" & 1 \\ \hline
+        9 & "book" & "back" & 2 \\ \hline
+        10 & "kitten" & "sitting" & 3 \\ \hline
+        11 & "flaw" & "lawn" & 2 \\ \hline
+        12 & "intention" & "execution" & 5 \\ \hline
+    \end{tabular}
+\end{table}
+\end{center}
+
+Все тесты пройдены успешно.
+
+\section*{Вывод}
+
+В данном разделе были рассмотрены алгоритмы вычисления расстояний Левенштейна и Дамерау-Левенштейна, а также их реализации на языке MicroPython. Программы успешно прошли тестирование на различных строках разной длины и содержания, что подтверждает их корректность и работоспособность.

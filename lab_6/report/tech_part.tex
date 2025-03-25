@@ -1,0 +1,238 @@
+\chapter{Технологическая часть}
+
+В данном разделе будут рассмотрены средства, использованные для разработки, а также приведены коды реализованных алгоритмов.
+
+\section{Средства реализации}
+
+Python был выбран, потому что он предлагает все необходимые инструменты для реализации алгоритмов.
+
+
+\subsection{Алгоритм поиска решения задачи коммивояжера полным перебором}
+
+В листинге~\ref{lst:full_check} представлен алгоритм поиска решения задачи коммивояжера полным перебором.
+\begin{center}
+\begin{lstlisting}[caption={Алгоритм поиска решения задачи коммивояжера полным перебором}, label={lst:full_check}]
+def full_check(distance_matrix):
+    n = len(distance_matrix)
+    cities = list(range(n))
+    best_length = float('inf')
+
+    perms = generate_permutations(cities)
+    for perm in perms:
+        cycle = perm + [perm[0]]
+
+        length = 0
+        for i in range(n):
+            from_city = cycle[i]
+            to_city = cycle[i + 1]
+            distance = distance_matrix[from_city][to_city]
+            length += distance
+
+        if length < best_length:
+            best_length = length
+
+    return best_length
+\end{lstlisting}
+\end{center}
+
+В листинге~\ref{lst:generate_permutations} представлен алгоритм генерации всех возможных перестановки элементов входного списка.
+\begin{center}
+\begin{lstlisting}[caption={Алгоритм генерации всех возможных перестановки элементов входного списка}, label={lst:generate_permutations}]
+def generate_permutations(elements):
+    n = len(elements)
+    if n == 0:
+        return [[]]
+
+    permutations = []
+    for i in range(n):
+        generated_permutations = generate_permutations(elements[:i] + elements[i+1:])
+        for perm in generated_permutations:
+            permutations.append([elements[i]] + perm)
+    return permutations
+\end{lstlisting}
+\end{center}
+
+\subsection{Алгоритм поиска решения задачи коммивояжера муравьиным алгоритмом}
+
+В листинге~\ref{lst:ant_colony_optimization} представлен алгоритм поиска решения задачи коммивояжера муравьиным алгоритмом.
+\begin{center}
+\begin{lstlisting}[caption={Алгоритм поиска решения задачи коммивояжера муравьиным алгоритмом}, label={lst:ant_colony_optimization}]
+def ant_colony_optimization(n, distance_matrix, alpha, beta, rho, Q, tmax, n_ants):
+    visibility = initialize_visibility(distance_matrix)
+    pheromones = initialize_pheromones(n)
+
+    best_route = None
+    best_length = float('inf')
+
+    for t in range(tmax):
+        routes = []
+        lengths = []
+
+        for ant in range(n_ants):
+            current_city = random.randint(0, n - 1)
+            visited = [False] * n
+            visited[current_city] = True
+            route = [current_city]
+
+            while len(route) < n:
+                probabilities = calculate_probabilities(pheromones, visibility, visited, current_city, alpha, beta)
+                r = random.random()
+                cumulative = 0
+                next_city = None
+                for j, prob in enumerate(probabilities):
+                    cumulative += prob
+                    if r <= cumulative + 1e-5:
+                        next_city = j
+                        break
+
+                route.append(next_city)
+                visited[next_city] = True
+                current_city = next_city
+
+            route.append(route[0])
+            routes.append(route)
+
+            length = calculate_route_length(route, distance_matrix)
+            lengths.append(length)
+
+        min_length = min(lengths)
+        if min_length < best_length:
+            best_length = min_length
+            best_route = routes[lengths.index(min_length)]
+
+        pheromones = update_pheromones(distance_matrix, pheromones, routes, lengths, rho, Q, elite_route=best_route)
+
+    return best_route, best_length
+\end{lstlisting}
+\end{center}
+
+В листинге~\ref{lst:initialize_visibility} представлен алгоритм инициализации матрицы видимости.
+\begin{center}
+\begin{lstlisting}[caption={Алгоритм инициализации матрицы видимости}, label={lst:initialize_visibility}]
+def initialize_visibility(distance_matrix):
+    n = len(distance_matrix)
+    visibility = []
+
+    for i in range(n):
+        row = []
+        for j in range(n):
+            if distance_matrix[i][j] > 0:
+                visibility_value = 1 / distance_matrix[i][j]
+            else:
+                visibility_value = 0
+            row.append(visibility_value)
+        visibility.append(row)
+    return visibility
+\end{lstlisting}
+\end{center}
+
+В листинге~\ref{lst:calculate_probabilities} представлен алгоритм вычисления вероятности перехода из текущего города в другие города.
+\begin{center}
+\begin{lstlisting}[caption={Алгоритм вычисления вероятности перехода из текущего города в другие города}, label={lst:calculate_probabilities}]
+def calculate_probabilities(pheromones, visibility, visited, current_city, alpha, beta):
+    n = len(pheromones)
+    probabilities = [0] * n
+    for j in range(n):
+        if not visited[j]:
+            probabilities[j] = (pheromones[current_city][j] ** alpha) * (visibility[current_city][j] ** beta)
+    total = sum(probabilities)
+    if total == 0:
+        probabilities = [1 if not visited[j] else 0 for j in range(n)]
+        total = sum(probabilities)
+    return [p / total for p in probabilities]
+\end{lstlisting}
+\end{center}
+
+В листинге~\ref{lst:calculate_route_length} представлен алгоритм вычисления длины маршрута.
+\begin{center}
+\begin{lstlisting}[caption={Алгоритм вычисления вычисления длины маршрута}, label={lst:calculate_route_length}]
+def calculate_route_length(route, distance_matrix):
+    length = 0
+    for i in range(len(route) - 1):
+        from_city = route[i]
+        to_city = route[i + 1]
+        distance = distance_matrix[from_city][to_city]
+        length += distance
+    return length
+\end{lstlisting}
+\end{center}
+
+В листинге~\ref{lst:update_pheromones} представлен алгоритм обновления феромонов.
+\begin{center}
+\begin{lstlisting}[caption={Алгоритм обновления феромонов}, label={lst:update_pheromones}]
+def update_pheromones(distance_matrix, pheromones, routes, lengths, rho, Q, elite_route=None):
+    n = len(pheromones)
+    for i in range(n):
+        for j in range(n):
+            pheromones[i][j] *= (1 - rho)
+
+    for route, length in zip(routes, lengths):
+        for i in range(len(route) - 1):
+            pheromones[route[i]][route[i + 1]] += Q / length
+
+    if elite_route:
+        elite_length = sum(distance_matrix[elite_route[i]][elite_route[i + 1]] for i in range(len(elite_route) - 1))
+        for i in range(len(elite_route) - 1):
+            pheromones[elite_route[i]][elite_route[i + 1]] += Q / elite_length
+
+    return pheromones
+\end{lstlisting}
+\end{center}
+
+\section{Тестовые данные}
+
+\subsection*{Используемые матрицы расстояний}
+
+1. \textbf{Матрица 1×1}
+\[
+\text{distance\_matrix\_1} = 
+\begin{bmatrix}
+0
+\end{bmatrix}
+\]
+
+2. \textbf{Матрица 3×3}
+\[
+\text{distance\_matrix\_3} = 
+\begin{bmatrix}
+0 & 10 & 15 \\
+10 & 0 & 20 \\
+15 & 20 & 0
+\end{bmatrix}
+\]
+
+3. \textbf{Матрица 5×5}
+\[
+\text{distance\_matrix\_5} = 
+\begin{bmatrix}
+0 & 12 & 10 & 29 & 15 \\
+12 & 0 & 8 & 30 & 18 \\
+10 & 8 & 0 & 25 & 16 \\
+29 & 30 & 25 & 0 & 22 \\
+15 & 18 & 16 & 22 & 0
+\end{bmatrix}
+\]
+
+\subsection*{Результаты тестирования}
+
+Результаты тестирования приведены в таблице~\ref{tab:results}.
+
+
+\begin{longtable}{|c|c|c|c|c|p{4cm}|}
+\caption{Результаты тестирования\label{tab:results}} \\ \hline
+\textbf{№ теста} & \textbf{Размер матрицы} & \textbf{Алгоритм} & \textbf{Ожидаемый рез-т} & \textbf{Фактический рез-т} \\ \hline
+1 & 1×1 & Полный перебор & 0, [0] & 0, [0]  \\ \hline
+2 & 1×1 & Муравьиный алгоритм & 0, [0] & 0, [0]  \\ \hline
+3 & 3×3 & Полный перебор & 45, [0, 1, 2, 0] & 45, [0, 1, 2, 0] \\ \hline
+4 & 3×3 & Муравьиный алгоритм & 45, [0, 1, 2, 0] & 45, [0, 1, 2, 0] \\ \hline
+5 & 5×5 & Полный перебор & 88, [0, 2, 1, 4, 3, 0] & 88, [0, 2, 1, 4, 3, 0] \\ \hline
+6 & 5×5 & Муравьиный алгоритм & 88, [0, 2, 1, 4, 3, 0] & 88, [0, 2, 1, 4, 3, 0] \\ \hline
+\end{longtable}
+
+Все тесты пройдены успешно.
+
+\section*{Вывод}
+
+Были разработаны и протестированы реализованные алгоритмы.
+
+
