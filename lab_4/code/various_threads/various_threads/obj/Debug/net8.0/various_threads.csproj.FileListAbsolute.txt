@@ -1,0 +1,14 @@
+C:\Users\varya\AA\lab_4\rep_otkat_try_ann\code\various_threads\various_threads\bin\Debug\net8.0\various_threads.exe
+C:\Users\varya\AA\lab_4\rep_otkat_try_ann\code\various_threads\various_threads\bin\Debug\net8.0\various_threads.deps.json
+C:\Users\varya\AA\lab_4\rep_otkat_try_ann\code\various_threads\various_threads\bin\Debug\net8.0\various_threads.runtimeconfig.json
+C:\Users\varya\AA\lab_4\rep_otkat_try_ann\code\various_threads\various_threads\bin\Debug\net8.0\various_threads.dll
+C:\Users\varya\AA\lab_4\rep_otkat_try_ann\code\various_threads\various_threads\bin\Debug\net8.0\various_threads.pdb
+C:\Users\varya\AA\lab_4\rep_otkat_try_ann\code\various_threads\various_threads\obj\Debug\net8.0\various_threads.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\varya\AA\lab_4\rep_otkat_try_ann\code\various_threads\various_threads\obj\Debug\net8.0\various_threads.AssemblyInfoInputs.cache
+C:\Users\varya\AA\lab_4\rep_otkat_try_ann\code\various_threads\various_threads\obj\Debug\net8.0\various_threads.AssemblyInfo.cs
+C:\Users\varya\AA\lab_4\rep_otkat_try_ann\code\various_threads\various_threads\obj\Debug\net8.0\various_threads.csproj.CoreCompileInputs.cache
+C:\Users\varya\AA\lab_4\rep_otkat_try_ann\code\various_threads\various_threads\obj\Debug\net8.0\various_threads.dll
+C:\Users\varya\AA\lab_4\rep_otkat_try_ann\code\various_threads\various_threads\obj\Debug\net8.0\refint\various_threads.dll
+C:\Users\varya\AA\lab_4\rep_otkat_try_ann\code\various_threads\various_threads\obj\Debug\net8.0\various_threads.pdb
+C:\Users\varya\AA\lab_4\rep_otkat_try_ann\code\various_threads\various_threads\obj\Debug\net8.0\various_threads.genruntimeconfig.cache
+C:\Users\varya\AA\lab_4\rep_otkat_try_ann\code\various_threads\various_threads\obj\Debug\net8.0\ref\various_threads.dll
